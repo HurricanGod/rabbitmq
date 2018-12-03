@@ -1,5 +1,6 @@
-package cn.hurrican.service;
+package cn.hurrican.mq.consumer;
 
+import cn.hurrican.model.UserEntity;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class UserMessageConsumerHandlerImpl implements MessageConsumerHandler {
 
     @Override
     public String supportEntityClassName() {
-        return null;
+        return UserEntity.class.getName();
     }
 
     @Override

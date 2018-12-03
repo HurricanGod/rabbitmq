@@ -1,5 +1,6 @@
-package cn.hurrican.service;
+package cn.hurrican.mq.consumer;
 
+import cn.hurrican.model.AppConfigEntity;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,6 @@ public class AppConfigMessageConsumerHandlerImpl implements MessageConsumerHandl
 
     @Override
     public String supportEntityClassName() {
-        return null;
+        return AppConfigEntity.class.getName();
     }
 }
