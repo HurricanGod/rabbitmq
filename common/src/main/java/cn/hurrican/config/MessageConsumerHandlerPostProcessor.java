@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author: Hurrican
@@ -25,13 +26,19 @@ public class MessageConsumerHandlerPostProcessor implements ApplicationContextAw
 
     private ApplicationContext context;
 
+
+    private volatile AtomicBoolean isInit = new AtomicBoolean(false);
+
     @PostConstruct
     public void init(){
         try{
-            MessageConsumerHandlerMapping consumerHandlerHolder = context.getBean(MessageConsumerHandlerMapping.class);
-            if(consumerHandlerHolder != null){
-                Map<String, MessageConsumerHandler> consumerHandlerMap = context.getBeansOfType(MessageConsumerHandler.class);
-                consumerHandlerMap.forEach((handlerName, handler) -> consumerHandlerHolder.registerMessageConsumerHandler(handler.supportEntityClassName(), handlerName));
+            if(!isInit.get()){
+                MessageConsumerHandlerMapping consumerHandlerHolder = context.getBean(MessageConsumerHandlerMapping.class);
+                if(consumerHandlerHolder != null){
+                    Map<String, MessageConsumerHandler> consumerHandlerMap = context.getBeansOfType(MessageConsumerHandler.class);
+                    consumerHandlerMap.forEach((handlerName, handler) -> consumerHandlerHolder.registerMessageConsumerHandler(handler.supportEntityClassName(), handlerName));
+                    isInit.set(true);
+                }
             }
         }catch( Exception e){
             log.error("初始化消费者消息处理器时发生异常：{}", e);
