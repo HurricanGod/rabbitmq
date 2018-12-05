@@ -1,4 +1,4 @@
-package cn.hurrican.model;
+package cn.hurrican.consumer.model;
 
 import cn.hurrican.rabbitmq.AsyncMessageAction;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package cn.hurrican.config;
+package cn.hurrican.consumer.config;
 
 import cn.hurrican.rabbitmq.MessageConsumerHandler;
 import cn.hurrican.rabbitmq.MessageConsumerHandlerMapping;

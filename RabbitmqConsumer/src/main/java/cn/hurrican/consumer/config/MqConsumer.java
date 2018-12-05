@@ -1,4 +1,4 @@
-package cn.hurrican.config;
+package cn.hurrican.consumer.config;
 
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

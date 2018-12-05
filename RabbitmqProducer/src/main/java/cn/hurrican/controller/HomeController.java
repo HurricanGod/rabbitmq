@@ -1,7 +1,7 @@
 package cn.hurrican.controller;
 
 import cn.hurrican.model.ResMessage;
-import cn.hurrican.model.UserEntity;
+import cn.hurrican.consumer.model.UserEntity;
 import cn.hurrican.mq.producer.ProducerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

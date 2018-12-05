@@ -1,6 +1,6 @@
 package cn.hurrican.mq.consumer;
 
-import cn.hurrican.model.AppConfigEntity;
+import cn.hurrican.consumer.model.AppConfigEntity;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
 import org.springframework.stereotype.Service;

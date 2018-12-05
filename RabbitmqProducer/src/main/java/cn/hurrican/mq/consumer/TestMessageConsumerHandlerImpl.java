@@ -1,6 +1,6 @@
 package cn.hurrican.mq.consumer;
 
-import cn.hurrican.model.TestMqEntity;
+import cn.hurrican.consumer.model.TestMqEntity;
 import cn.hurrican.rabbitmq.MessageConsumerHandler;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
