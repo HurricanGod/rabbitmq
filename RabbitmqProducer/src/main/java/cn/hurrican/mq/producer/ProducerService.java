@@ -22,13 +22,15 @@ public class ProducerService {
     /**
      *
      * @param queueName 交换机名称
-     * @param routeKey 路由Key
      * @param obj 消息对象
      */
-    public void sendDataToDirectExchange(String queueName, String routeKey, Object obj) {
-        routeKey = Optional.ofNullable(routeKey).orElse("defaultRouteKey");
+    public void sendDataToDirectExchange(String queueName, Object obj) {
         amqpTemplate.convertAndSend(queueName, obj);
+    }
 
+
+    public void sendMessageToFanoutExchange(String exchange, Object message, String routingKey){
+        amqpTemplate.convertAndSend(exchange, routingKey, message);
     }
 
 }

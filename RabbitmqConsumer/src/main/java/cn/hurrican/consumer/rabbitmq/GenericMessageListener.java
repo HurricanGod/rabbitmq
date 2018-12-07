@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -36,16 +37,18 @@ public class GenericMessageListener implements ChannelAwareMessageListener, Appl
     @Autowired
     private List<Queue> queueList;
 
+
+    @Autowired
+    private Map<String, Queue> queueMap;
+
     @PostConstruct
     public void init(){
 
         defaultMessageListenerContainer.setMessageListener(this);
-        if(queueList != null && queueList.size() > 0){
-            System.out.println("queueList = " + queueList);
-            Queue[] queues = new Queue[queueList.size()];
-            queueList.toArray(queues);
-            defaultMessageListenerContainer.setQueues(queues);
-
+        if(queueMap != null){
+            queueMap.remove("logQueue");
+            Collection<Queue> queues = queueMap.values();
+            defaultMessageListenerContainer.setQueues(queues.toArray(new Queue[queues.size()]));
         }
     }
 

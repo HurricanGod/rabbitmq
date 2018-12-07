@@ -3,9 +3,12 @@ package cn.hurrican.controller;
 import cn.hurrican.model.ResMessage;
 import cn.hurrican.consumer.model.UserEntity;
 import cn.hurrican.mq.producer.ProducerService;
+import cn.hurrican.rabbitmq.AsyncMessageAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.Random;
 
 /**
  * @Author: Hurrican
@@ -39,6 +43,14 @@ public class HomeController {
     @Qualifier("userEntityQueue")
     private Queue userEntityQueue;
 
+    @Autowired
+    @Qualifier("logFanoutExchange")
+    private FanoutExchange logFanoutExchange;
+
+    @Autowired
+    @Qualifier("logBinding")
+    private Binding logBinding;
+
 
 
     @RequestMapping(value = "/sendMessage/{id}/{nickName}", produces = "application/json;charset=UTF-8")
@@ -47,7 +59,23 @@ public class HomeController {
         userEntity.setNickName(nickName);
         userEntity.setUid(id);
         userEntity.setRegisterDate(new Date());
-        producerService.sendDataToDirectExchange(userEntityQueue.getName(), null, userEntity);
+        producerService.sendDataToDirectExchange(userEntityQueue.getName(), userEntity);
+        return ResMessage.creator().msg("success");
+    }
+
+
+    @RequestMapping(value = "/sendLog", produces = "application/json;charset=UTF-8")
+    public ResMessage sendLog(String phone){
+        Random random = new Random();
+        int id = random.nextInt(100);
+        System.out.println("produce id = " + id);
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setAction(AsyncMessageAction.INSERT);
+        userEntity.setPhone(phone);
+        userEntity.setUid(id);
+
+        producerService.sendMessageToFanoutExchange(logFanoutExchange.getName(), userEntity, logBinding.getRoutingKey());
         return ResMessage.creator().msg("success");
     }
 
