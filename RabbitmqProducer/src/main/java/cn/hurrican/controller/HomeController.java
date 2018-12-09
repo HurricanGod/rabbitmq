@@ -1,9 +1,9 @@
 package cn.hurrican.controller;
 
-import cn.hurrican.model.ResMessage;
 import cn.hurrican.consumer.model.UserEntity;
+import cn.hurrican.model.ResMessage;
+import cn.hurrican.model.UniqueKeyElement;
 import cn.hurrican.mq.producer.ProducerService;
-import cn.hurrican.rabbitmq.AsyncMessageAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.core.Binding;
@@ -70,12 +70,10 @@ public class HomeController {
         int id = random.nextInt(100);
         System.out.println("produce id = " + id);
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setAction(AsyncMessageAction.INSERT);
-        userEntity.setPhone(phone);
-        userEntity.setUid(id);
+        UniqueKeyElement element = new UniqueKeyElement();
+        element.aidIs(id).platformIdIs(0).setOther("Hurrican");
 
-        producerService.sendMessageToFanoutExchange(logFanoutExchange.getName(), userEntity, logBinding.getRoutingKey());
+        producerService.sendMessageToFanoutExchange(logFanoutExchange.getName(), element, logBinding.getRoutingKey());
         return ResMessage.creator().msg("success");
     }
 

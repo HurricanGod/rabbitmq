@@ -1,6 +1,7 @@
 package cn.hurrican.config;
 
 
+import cn.hurrican.service.JacksonMessageConverter;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -10,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import cn.hurrican.service.JacksonMessageConverter;
 
 
 /**
@@ -24,7 +24,7 @@ import cn.hurrican.service.JacksonMessageConverter;
 public class RabbitBaseConfig {
 
     @Autowired
-    Environment env;
+    private Environment env;
 
 
     @Bean(name = "cachingConnectionFactory4Producer")

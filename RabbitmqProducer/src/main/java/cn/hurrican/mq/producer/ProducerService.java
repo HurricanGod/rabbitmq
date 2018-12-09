@@ -2,9 +2,8 @@ package cn.hurrican.mq.producer;
 
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 /**
  * @Author: Hurrican
@@ -16,7 +15,12 @@ import java.util.Optional;
 public class ProducerService {
 
     @Autowired
+    @Qualifier("rabbitTemplate")
     private AmqpTemplate amqpTemplate;
+
+    @Autowired
+    @Qualifier("defaultRabbitTemplate")
+    private AmqpTemplate defaultRabbitTemplate;
 
 
     /**
@@ -30,7 +34,7 @@ public class ProducerService {
 
 
     public void sendMessageToFanoutExchange(String exchange, Object message, String routingKey){
-        amqpTemplate.convertAndSend(exchange, routingKey, message);
+        defaultRabbitTemplate.convertAndSend(exchange, routingKey, message);
     }
 
 }

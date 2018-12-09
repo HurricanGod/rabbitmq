@@ -1,10 +1,11 @@
-package cn.hurrican.consumer.rabbitmq;
+package cn.hurrican.rabbitmq;
 
-import cn.hurrican.consumer.model.UserEntity;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 /**
  * @Author: Hurrican
@@ -16,8 +17,13 @@ import org.springframework.stereotype.Component;
 public class LogListener {
 
     @RabbitListener(queues = "logQueue")
-    public void receiveAmqpMessage(UserEntity userEntity){
-        System.out.println("userEntity = " + userEntity);
+    public void receiveAmqpMessage(Message msg, Channel channel) {
+        System.out.println("element = " + msg);
         System.out.println("Hello, LogQueue...");
+        try {
+            channel.basicAck(msg.getMessageProperties().getDeliveryTag(), false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
