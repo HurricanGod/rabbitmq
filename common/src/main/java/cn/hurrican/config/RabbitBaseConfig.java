@@ -72,7 +72,7 @@ public class RabbitBaseConfig {
 
 
     @Bean(name = "jsonMessageConverter")
-    public JacksonMessageConverter getFastJsonMessageConverter() {
+    public JacksonMessageConverter getJacksonMessageConverter() {
         return new JacksonMessageConverter();
     }
 

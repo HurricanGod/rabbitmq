@@ -1,6 +1,7 @@
 package cn.hurrican.controller;
 
 import cn.hurrican.consumer.model.UserEntity;
+import cn.hurrican.model.AppConfig;
 import cn.hurrican.model.ResMessage;
 import cn.hurrican.model.UniqueKeyElement;
 import cn.hurrican.mq.producer.ProducerService;
@@ -50,6 +51,22 @@ public class HomeController {
     @Autowired
     @Qualifier("logBinding")
     private Binding logBinding;
+
+
+    @RequestMapping(value = "/sendAppConfig", produces = "application/json;charset=UTF-8")
+    public ResMessage sendAppConfig() {
+        Random random = new Random();
+        int id = random.nextInt(10000);
+        AppConfig appConfig = new AppConfig();
+        appConfig.setId(id);
+        appConfig.setDriveName("com.mysql.jdbc.Driver");
+        appConfig.setMysqlDatabase("DebugAppConfig");
+        appConfig.setMysqlUsername("root");
+
+        producerService.sendMessageToFanoutExchange("debugFanoutExchange", appConfig, "debugRoutingKey");
+        System.out.println("id = " + id);
+        return ResMessage.creator();
+    }
 
 
 

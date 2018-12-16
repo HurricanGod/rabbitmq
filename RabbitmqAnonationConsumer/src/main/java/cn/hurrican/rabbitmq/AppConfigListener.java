@@ -1,6 +1,8 @@
 package cn.hurrican.rabbitmq;
 
+import cn.hurrican.model.AppConfig;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,8 +14,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppConfigListener {
 
-    @RabbitListener(queues = "appConfigQueue")
-    public void receiveAppConfig(){
-
+    @RabbitListener(queues = "debugQueue")
+    public void receiveAppConfig(@Payload AppConfig appConfig) {
+        System.out.println("appConfig = " + appConfig);
+        System.out.println(appConfig.getId());
     }
 }
