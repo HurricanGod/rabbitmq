@@ -16,7 +16,7 @@ import java.io.IOException;
 @Component
 public class LogListener {
 
-    @RabbitListener(queues = "logQueue")
+    @RabbitListener(queues = "logQueue", containerFactory = "rabbitListenerContainerFactory")
     public void receiveAmqpMessage(Message msg, Channel channel) {
         System.out.println("element = " + msg);
         System.out.println("Hello, LogQueue...");

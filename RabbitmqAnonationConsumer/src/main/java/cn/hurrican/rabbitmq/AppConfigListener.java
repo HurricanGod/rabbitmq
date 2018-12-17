@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 public class AppConfigListener {
 
-    @RabbitListener(queues = "appConfigQueue")
+    @RabbitListener(queues = "appConfigQueue", containerFactory = "rabbitListenerContainerFactory")
     public void receiveAppConfig(@Payload AppConfig appConfig, Channel channel, @Headers Map<String, Object> headers) {
         System.out.println("appConfig = " + appConfig);
         if (headers != null) {
