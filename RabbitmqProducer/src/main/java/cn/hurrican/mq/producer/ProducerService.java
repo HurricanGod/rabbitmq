@@ -20,9 +20,6 @@ public class ProducerService {
     private AmqpTemplate defaultRabbitTemplate;
 
 
-
-
-
     public void sendMessageToFanoutExchange(String exchange, Object message, String routingKey){
         defaultRabbitTemplate.convertAndSend(exchange, routingKey, message);
     }
