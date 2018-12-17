@@ -14,23 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProducerService {
 
-    @Autowired
-    @Qualifier("rabbitTemplate")
-    private AmqpTemplate amqpTemplate;
 
     @Autowired
     @Qualifier("defaultRabbitTemplate")
     private AmqpTemplate defaultRabbitTemplate;
 
 
-    /**
-     *
-     * @param queueName 交换机名称
-     * @param obj 消息对象
-     */
-    public void sendDataToDirectExchange(String queueName, Object obj) {
-        amqpTemplate.convertAndSend(queueName, obj);
-    }
+
 
 
     public void sendMessageToFanoutExchange(String exchange, Object message, String routingKey){

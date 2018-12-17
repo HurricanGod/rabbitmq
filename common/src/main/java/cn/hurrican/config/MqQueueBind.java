@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @Author: Hurrican
- * @Description:
  * @Date 2018/12/3
  * @Modified 10:23
  */
@@ -39,7 +38,7 @@ public class MqQueueBind {
     }
 
     @Bean(name = "logFanoutExchange")
-    public FanoutExchange getLogFanoutExchange(Queue logQueue){
+    public FanoutExchange getLogFanoutExchange(){
         return new FanoutExchange("logFanoutExchange", true, false);
     }
 
@@ -48,6 +47,24 @@ public class MqQueueBind {
     public Binding getLogBinding(Queue logQueue, Exchange logFanoutExchange){
         return new Binding(logQueue.getName(), Binding.DestinationType.QUEUE,
                 logFanoutExchange.getName(), "logBindingKey", null);
+
+    }
+
+    @Bean(name = "appConfigQueue")
+    public Queue getAppConfigQueue(){
+        return new Queue("appConfigQueue", true, false, false);
+    }
+
+
+    @Bean(name = "appConfigFanoutExchange")
+    public FanoutExchange getAppConfigFanoutExchange(){
+        return new FanoutExchange("appConfigFanoutExchange", true, false);
+    }
+
+    @Bean(name = "appConfigBinding")
+    public Binding getAppConfigBinding(Queue appConfigQueue, FanoutExchange appConfigFanoutExchange){
+        return new Binding(appConfigQueue.getName(), Binding.DestinationType.QUEUE,
+                appConfigFanoutExchange.getName(), "appConfigBindingKey", null);
     }
 
 

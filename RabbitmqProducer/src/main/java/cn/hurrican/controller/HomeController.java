@@ -1,10 +1,10 @@
 package cn.hurrican.controller;
 
-import cn.hurrican.consumer.model.UserEntity;
 import cn.hurrican.model.AppConfig;
 import cn.hurrican.model.ResMessage;
 import cn.hurrican.model.UniqueKeyElement;
 import cn.hurrican.mq.producer.ProducerService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.core.Binding;
@@ -13,11 +13,9 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.Random;
 
 /**
@@ -28,9 +26,9 @@ import java.util.Random;
  */
 @RestController
 @RequestMapping("/home")
+@Slf4j
 public class HomeController {
 
-    private static Logger logger = LogManager.getLogger(HomeController.class);
 
     @Autowired
     private ProducerService producerService;
@@ -53,6 +51,16 @@ public class HomeController {
     private Binding logBinding;
 
 
+    @Autowired
+    @Qualifier("appConfigFanoutExchange")
+    private FanoutExchange appConfigFanoutExchange;
+
+
+    @Autowired
+    @Qualifier("appConfigBinding")
+    private Binding appConfigBinding;
+
+
     @RequestMapping(value = "/sendAppConfig", produces = "application/json;charset=UTF-8")
     public ResMessage sendAppConfig() {
         Random random = new Random();
@@ -70,15 +78,6 @@ public class HomeController {
 
 
 
-    @RequestMapping(value = "/sendMessage/{id}/{nickName}", produces = "application/json;charset=UTF-8")
-    public ResMessage sendMessage(@PathVariable("id") Integer id, @PathVariable("nickName") String nickName){
-        UserEntity userEntity = new UserEntity();
-        userEntity.setNickName(nickName);
-        userEntity.setUid(id);
-        userEntity.setRegisterDate(new Date());
-        producerService.sendDataToDirectExchange(userEntityQueue.getName(), userEntity);
-        return ResMessage.creator().msg("success");
-    }
 
 
     @RequestMapping(value = "/sendLog", produces = "application/json;charset=UTF-8")
@@ -88,10 +87,22 @@ public class HomeController {
         System.out.println("produce id = " + id);
 
         UniqueKeyElement element = new UniqueKeyElement();
-        element.aidIs(id).platformIdIs(0).setOther("Hurrican");
+        element.aidIs(id).platformIdIs(0).setOther(phone);
 
         producerService.sendMessageToFanoutExchange(logFanoutExchange.getName(), element, logBinding.getRoutingKey());
         return ResMessage.creator().msg("success");
+    }
+
+
+    @RequestMapping(value = "/publishAppConfig", produces = "application/json;charset=UTF-8")
+    public ResMessage publishAppConfig(String host){
+        AppConfig appConfig = new AppConfig();
+        Random random = new Random();
+        appConfig.setId(random.nextInt(1000));
+        appConfig.setMysqlHost(host);
+        appConfig.setMysqlUsername("root");
+        producerService.sendMessageToFanoutExchange(appConfigFanoutExchange.getName(), appConfig, appConfigBinding.getRoutingKey());
+        return ResMessage.creator().msg("ok");
     }
 
 }

@@ -1,7 +1,6 @@
 package cn.hurrican.config;
 
 
-import cn.hurrican.service.JacksonMessageConverter;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -71,10 +70,6 @@ public class RabbitBaseConfig {
 
 
 
-    @Bean(name = "jsonMessageConverter")
-    public JacksonMessageConverter getJacksonMessageConverter() {
-        return new JacksonMessageConverter();
-    }
 
 
 }
